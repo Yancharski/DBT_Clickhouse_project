@@ -1,0 +1,38 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Raw append-only table with the original Open Notify API payload.
+    schema: raw
+    tables:
+      - name: astros_raw
+        description: One row per API call, payload stored as ClickHouse JSON.
+        columns:
+          - name: _inserted_at
+            description: UTC timestamp of the raw insert.
+            tests:
+              - not_null
+          - name: payload
+            description: Original Open Notify response payload.
+            tests:
+              - not_null
+
+  - name: core
+    description: Parsed layer populated only by the materialized view from raw.
+    schema: core
+    tables:
+      - name: people
+        description: Latest version of each astronaut by the natural key (craft, name).
+        columns:
+          - name: craft
+            description: Spacecraft or station name from the API payload.
+            tests:
+              - not_null
+          - name: name
+            description: Astronaut name from the API payload.
+            tests:
+              - not_null
+          - name: _inserted_at
+            description: Timestamp of the latest payload that produced the row.
+            tests:
+              - not_null

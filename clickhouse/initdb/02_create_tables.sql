@@ -1,4 +1,3 @@
--- raw (append-only)
 CREATE TABLE IF NOT EXISTS raw.astros_raw
 (
     _inserted_at DateTime64(3, 'UTC'),
@@ -8,7 +7,6 @@ ENGINE = MergeTree
 PARTITION BY toYYYYMM(_inserted_at)
 ORDER BY (_inserted_at);
 
--- deduplication by (craft,name) via ReplacingMergeTree(version=_inserted_at)
 CREATE TABLE IF NOT EXISTS core.people
 (
     craft String,

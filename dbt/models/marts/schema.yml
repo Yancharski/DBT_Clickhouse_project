@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: people_latest_incremental
+    description: Incremental analytics-layer copy of the parsed people table.
+    columns:
+      - name: craft
+        description: Spacecraft or station name.
+        tests:
+          - not_null
+      - name: name
+        description: Astronaut name.
+        tests:
+          - not_null
+      - name: _inserted_at
+        description: Latest ingestion timestamp captured in the model.
+        tests:
+          - not_null
+
+  - name: craft_summary
+    description: Simple mart with a people count and the latest load timestamp by craft.
+    columns:
+      - name: craft_family
+        description: Normalized craft bucket used for a stable accepted_values test.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['iss', 'tiangong', 'other']
+      - name: craft
+        description: Original craft name from the API.
+        tests:
+          - not_null
+      - name: people_count
+        description: Number of people currently associated with the craft.
+        tests:
+          - not_null
+      - name: latest_loaded_at
+        description: Timestamp of the freshest row contributing to the summary.
+        tests:
+          - not_null

@@ -1,0 +1,19 @@
+astros_clickhouse:
+  target: dev
+  outputs:
+    dev:
+      type: clickhouse
+      driver: http
+      schema: analytics
+      host: "{{ env_var('CH_DBT_HOST', 'clickhouse') }}"
+      port: "{{ env_var('CH_DBT_PORT', '8123') | int }}"
+      user: "{{ env_var('CH_DBT_USER') }}"
+      password: "{{ env_var('CH_DBT_PASSWORD') }}"
+      secure: false
+      verify: false
+      connect_timeout: 10
+      send_receive_timeout: 300
+      sync_request_timeout: 10
+      compression: lz4
+      retries: 1
+      threads: "{{ env_var('DBT_THREADS', '4') | int }}"
